@@ -157,10 +157,9 @@ def parse_args():
     return parser.parse_args()
 
 
-def main():
+def create_reminder(params):
     parse_args()  # handles the help menu
     auth_http = authenticate()
-    params = read_reminder_params()
     if params:
         headers, data = params
         response, content = auth_http.request(
@@ -171,13 +170,23 @@ def main():
         )
         if response.status == HTTP_OK:
             print('Reminder set successfully')
+            print(response)
+            print(content)
         else:
             print('Error while trying to set a reminder:')
             print(f'    status code - {response.status}')
             print(f'    {content}')
     else:
         print('Reminder was not saved')
+        
+def create(title, year, month, day, hour, minute):
+    params = build_request_params(title, year, month, day, hour, minute)
+    create_reminder(params)
+    
+def main():
+    params = read_reminder_params()
+    create_reminder(params)
 
-
+    
 if __name__ == '__main__':
     main()
